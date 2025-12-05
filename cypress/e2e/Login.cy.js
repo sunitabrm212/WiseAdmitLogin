@@ -1,44 +1,122 @@
-describe("Login Functionality", () => {
+// Import the Login Page Object Model
+import Login from "../PageObjects/LoginPage.js";
 
+describe("Login Test", () => {
+    // Create a new instance of the Login page object
+    const ln = new Login();
+
+    // Runs before each test case
     beforeEach(() => {
-        cy.visit("https://opensource-demo.orangehrmlive.com/web/index.php/auth/login");
+        cy.visit("https://www.wiseadmit.io/applynow"); // Visit the ApplyNow login page
     })
 
-    it("Logo is visible in the login page", () => {
+    // Test 1: Verify the URL of the login page
+    it("has URL", () => {
 
-        cy.get('.orangehrm-login-branding > img').should('be.visible');
-
-    })
-
-    it("Check that the username and password field exist", () => {
-
-        cy.get('input[name = "username"]').should('exist')
-        cy.get('input[name = "password"]').should('exist')
+        cy.url().should('eq', 'https://www.wiseadmit.io/applynow');
 
     })
 
-    it("Check that the login button is enable", () => {
+    // Test 2: Verify the page title
+    it("Title exist or not", () => {
 
-        cy.get('button[type = "submit"]').should('be.enabled');
+        cy.title().should('eq',"ApplyNow | WiseAdmit" );
 
     })
 
-    it("Check that entering valid credentials redirects user to dashboard", () => {
+    // Test 3: Check visibility of email and password fields
+    it("Check email and password password field visibility", () => {
+
+        cy.fixture('credentials').then((data) => {
+            ln.verifyEmailVisibility();
+            ln.verifyPasswordVisibility(data.email);
+        });
+
+    })
+
+    // Test 4: Login with valid credentials
+    it('Validate login with valid email and password', () => {
+
+        cy.fixture('credentials').then((data) => {
+
+            ln.setEmail(data.email)
+            ln.clickLogin();
+            ln.setPassword(data.password)
+            ln.clickLogin();
+            ln.verifyLogin();
+
+        })
+
+    })
+
+    // Test 5: Verify login button is disabled when fields are empty
+    it("Validate login button is disabled when email or password are empty", () => {
+
+    // Without typing anything
+    ln.verifyLoginButtonDisabled();
+
+    });
+
+    // Test 6: Verify validation message when password is empty
+    it("Error validation message when password field is emtpy", () => {
+        cy.fixture('credentials').then((data) => {
         
-        cy.get('input[name = "username"]').type("Admin")
-        cy.get('input[name = "password"]').type("admin123")
-        cy.get('button[type = "submit"]').click()
-        cy.url().should('eq', "https://opensource-demo.orangehrmlive.com/web/index.php/dashboard/index")
+            ln.verifyEmailVisibility();
+            ln.verifyPasswordVisibility(data.email);
+        });
+    })
+
+    //Test 7: Verify invalid email format validation
+    it("Validate invalid message appears or not when random text is entered", () => {
+        ln.setEmail("abc123");
+        ln.clickLogin();
+        ln.verifyInvalidEmailError();
+    })
+
+    // Test 8: Login with unregistered email
+    it("Validate validation message when unregistered email is entered", () => {
+        cy.fixture('credentials').then((data) => {
+
+        ln.setEmail(data.unregisteredEmail);
+        ln.clickLogin();
+        ln.verifyFailedToGetStudentError();
+
+        })
+        
+    })
+
+    // Test 9: Login with valid email but invalid password
+    it("Validate login with valid email and invalid password", () => {
+
+        cy.fixture('credentials').then((data) => {
+
+            ln.setEmail(data.email);
+            ln.clickLogin();
+            ln.setPassword("abc123");
+            ln.clickLogin();
+            ln.verifyInvalidCredentials();
+
+        })
 
     })
 
-    it("Check that entering invalid username and password displays error message", () => {
+    // Test 10: Login with invalid email and valid password
+    it("Validate login with invalid email and valid password", () => {
 
-        cy.get('input[name = "username"]').type("Sunita")
-        cy.get('input[name = "password"]').type("Sunita123")
-        cy.get('button[type = "submit"]').click()
-        cy.get('.oxd-alert-content > .oxd-text').should('have.text', "Invalid credentials")
+    cy.fixture('credentials').then((data) => {
+
+        ln.setEmail(data.email);
+        ln.clickLogin();
+        ln.clearEmail();
+        ln.setEmail("sunita@gmail.com")
+        ln.setPassword("Sunita123@");
+        ln.clickLogin();
+        ln.verifyUserNotFound();
+
+    })    
 
     })
+
+
 
 })
