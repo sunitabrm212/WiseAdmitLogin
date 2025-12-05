@@ -50,7 +50,8 @@ wiseadmit-signin-tests/
 
 2. Run All Tests in Headless Mode => npx cypress run
 
-# Excel link for WiseAdmit Login Test Case
+# Excel link for WiseAdmit Login Test Case : [Open the spreadsheet in browser](https://docs.google.com/spreadsheets/d/1ByMFWRk3qHiujetuYpj1ZBQDjiAa_am-CK-f0AnRFtE/edit?usp=sharing)
+
 
 # 1. Five Things That Could Break the Sign-In Process
 
