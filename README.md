@@ -65,6 +65,11 @@ Password policy updates – Stricter validation rules may cause previously valid
 # 2. Five Improvements for the Website
 
 ->Provide unique IDs for each element – Makes automation more reliable and easier to maintain.
+
 ->User-friendly error messages – Make validation and error messages clearer and consistent.
+
+->Placeholder should be provided in both Email and password field for consistency.
+
 ->Remember Me / Auto-login option – Improve user convenience by allowing users to stay logged in.
+
 ->Social login options (Google/Facebook) – Allow users to sign in using social accounts for faster login and better user experience.
